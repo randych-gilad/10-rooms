@@ -162,7 +162,7 @@ fn main() {
   let current_room = rooms.room();
   let mut input = String::new();
   loop {
-    println!("q: Exit | w: move/attack | e: look around | i: inventory | c: capacity");
+    println!("q: Exit | w: move/attack | e: look around | t: pick up | i: inventory | c: capacity");
     println!("Name: {} | HP: {}", player.name, player.hp);
     print!("Your command: ");
     stdout().flush().unwrap();
