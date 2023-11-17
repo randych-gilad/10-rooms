@@ -1,3 +1,5 @@
+use std::io;
+
 const INVENTORY_SIZE: usize = 9;
 const WEIGHT_CAP: u8 = 50;
 #[derive(Clone)]
@@ -8,11 +10,14 @@ struct Item {
     name: &'static str,
     weight: u8,
 }
+#[allow(dead_code)]
 struct Enemy<'a> {
     name: &'a str,
     hp: u8,
 }
 struct Rooms<'a>(Vec<Room<'a>>);
+#[allow(dead_code)]
+
 struct Room<'a> {
     enemy: Option<Enemy<'a>>,
     loot: Option<Item>,
@@ -111,6 +116,8 @@ impl Inventory {
     }
 }
 fn main() {
+    let mut rooms: Rooms = Rooms(Vec::new());
+    rooms.populate();
     let mut inventory = Inventory(Vec::with_capacity(INVENTORY_SIZE));
     inventory.add_item(Item {
         name: "The needful",
