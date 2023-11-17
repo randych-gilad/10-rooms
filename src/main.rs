@@ -47,4 +47,48 @@ impl Inventory {
 }
 fn main() {
     let mut inventory = Inventory(Vec::with_capacity(INVENTORY_SIZE));
+    inventory.add_item(Item {
+        name: "The needful",
+        weight: 0,
+    });
+    inventory.add_item(Item {
+        name: "Willy Wonka",
+        weight: 60,
+    });
+    inventory.add_item(Item {
+        name: "Web scrap",
+        weight: 20,
+    });
+    inventory.add_item(Item {
+        name: "Strawman Builder Kit",
+        weight: 40,
+    });
+    inventory.add_item(Item {
+        name: "Kangaroo emblem",
+        weight: 1,
+    });
+    inventory.add_item(Item {
+        name: "Peppermint fountain",
+        weight: 10,
+    });
+    inventory.add_item(Item {
+        name: "Whopper",
+        weight: 0,
+    });
+    inventory.add_item(Item {
+        name: "A tasty burger",
+        weight: 1,
+    });
+    inventory.add_item(Item {
+        name: "Haystack needle",
+        weight: 1,
+    });
+    inventory.add_item(Item {
+        name: "Cuphead master CD",
+        weight: 2,
+    });
+    inventory.add_item(Item {
+        name: "A taste of bright future",
+        weight: 10,
+    });
 }
