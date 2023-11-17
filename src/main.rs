@@ -26,33 +26,6 @@ struct Player<'a> {
 struct Rooms<'a>(Vec<Room<'a>>);
 
 impl<'a> Rooms<'a> {
-  fn room(&'a mut self) -> &mut Room {
-    self.0.get_mut(0).unwrap()
-  }
-}
-
-#[allow(dead_code)]
-struct Room<'a> {
-  enemy: Option<Enemy<'a>>,
-  loot: Option<Item>,
-}
-impl<'a> Room<'a> {
-  fn look(&self) {
-    match (&self.enemy, &self.loot) {
-      (Some(enemy), Some(loot)) => {
-        println!("You see enemies: {:?}", enemy);
-        println!("You see loot: {} ({} kg)", loot.name, loot.weight);
-      }
-      (Some(enemy), None) => println!("You see enemies: {:?}", enemy),
-      (None, Some(loot)) => println!("You see loot: {} ({} kg)", loot.name, loot.weight),
-      (None, None) => println!("You see nothing of interest."),
-    }
-  }
-  fn remove_item(&mut self) {
-    self.loot = None
-  }
-}
-impl<'a> Rooms<'a> {
   fn populate(&mut self) {
     self.0.push(Room {
       enemy: None,
@@ -110,7 +83,38 @@ impl<'a> Rooms<'a> {
       loot: None,
     });
   }
+  fn room(&'a mut self) -> &mut Room {
+    self.0.get_mut(0).unwrap()
+  }
+  fn move_room(&'a mut self) {
+    self.0.pop();
+  }
 }
+
+impl<'a> Rooms<'a> {}
+
+#[allow(dead_code)]
+struct Room<'a> {
+  enemy: Option<Enemy<'a>>,
+  loot: Option<Item>,
+}
+impl<'a> Room<'a> {
+  fn look(&self) {
+    match (&self.enemy, &self.loot) {
+      (Some(enemy), Some(loot)) => {
+        println!("You see enemies: {:?}", enemy);
+        println!("You see loot: {} ({} kg)", loot.name, loot.weight);
+      }
+      (Some(enemy), None) => println!("You see enemies: {:?}", enemy),
+      (None, Some(loot)) => println!("You see loot: {} ({} kg)", loot.name, loot.weight),
+      (None, None) => println!("You see nothing of interest."),
+    }
+  }
+  fn remove_item(&mut self) {
+    self.loot = None
+  }
+}
+
 impl Inventory {
   fn add_item(&mut self, item: Item) {
     match self.0.len() {
@@ -162,7 +166,7 @@ fn main() {
     hp: 10,
     inventory: Inventory(Vec::with_capacity(INVENTORY_SIZE)),
   };
-  let current_room = rooms.room();
+  let rooms_ref = &mut rooms;
   let mut input = String::new();
   loop {
     println!("q: Exit | w: move/attack | e: look around | t: pick up | i: inventory | c: capacity");
@@ -175,13 +179,13 @@ fn main() {
           clear_screen();
           break;
         }
-        "w" => todo!(),
-        "e" => current_room.look(),
+        "w" => rooms_ref.move_room(),
+        "e" => rooms_ref.room().look(),
         "t" => {
           player
             .inventory
-            .add_item(current_room.loot.clone().unwrap());
-          current_room.remove_item();
+            .add_item(rooms_ref.room().loot.clone().unwrap());
+          rooms_ref.room().remove_item();
         }
         "i" => player.inventory.list_inventory(),
         "c" => player.inventory.check_capacity(),
