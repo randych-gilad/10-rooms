@@ -18,5 +18,31 @@ impl Inventory {
             _ => println!("Cannot add {}. Inventory is full.", item.name),
         }
     }
+    fn list_inventory(&self) {
+        println!("\nItems in inventory:");
+        self.0.iter().enumerate().for_each(|(index, item)| {
+            println!("[{}]: {}, {} kg.", index + 1, item.name, item.weight);
+        });
+        println!();
+    }
+    fn drop_item(&mut self, index: usize) {
+        self.0.remove(index - 1);
+    }
+    fn check_capacity(&self) {
+        let total_weight = self.0.iter().map(|item| item.weight).sum();
+        match total_weight {
+            ..=WEIGHT_CAP => {}
+            _ => {
+                println!("Weight exceeded by {} kg.", total_weight - WEIGHT_CAP);
+                println!("Obvious items to drop:\n");
+                let mut sorted = self.0.clone();
+                sorted.sort_by(|original, sorted| sorted.weight.cmp(&original.weight));
+                sorted
+                    .iter()
+                    .filter(|item| item.weight >= WEIGHT_CAP / 2)
+                    .for_each(|item| println!("{}, {} kg", item.name, item.weight));
+            }
+        }
+    }
 }
 fn main() {}
