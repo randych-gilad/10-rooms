@@ -20,7 +20,7 @@ struct Enemy<'a> {
 struct Player<'a> {
   name: &'a str,
   hp: u8,
-  inventory: &'a Inventory,
+  inventory: Inventory,
   current_room: u8,
 }
 
@@ -31,6 +31,9 @@ impl<'a> Rooms<'a> {
     if let Some(room) = self.0.get(0) {
       room.look();
     }
+  }
+  fn room(&self) -> &Room {
+    self.0.get(0).unwrap()
   }
 }
 
@@ -154,11 +157,11 @@ fn clear_screen() {
 fn main() {
   let mut rooms: Rooms = Rooms(Vec::new());
   rooms.populate();
-  let mut inventory: Inventory = Inventory(Vec::with_capacity(INVENTORY_SIZE));
+  // let mut inventory: Inventory = Inventory(Vec::with_capacity(INVENTORY_SIZE));
   let mut player: Player = Player {
     name: "Brave",
     hp: 10,
-    inventory: &inventory,
+    inventory: Inventory(Vec::with_capacity(INVENTORY_SIZE)),
     current_room: 0,
   };
   let mut input = String::new();
@@ -176,8 +179,11 @@ fn main() {
         }
         "w" => todo!(),
         "e" => rooms.look(),
-        "i" => inventory.list_inventory(),
-        "c" => inventory.check_capacity(),
+        "t" => player
+          .inventory
+          .add_item(rooms.room().loot.clone().unwrap()),
+        "i" => player.inventory.list_inventory(),
+        "c" => player.inventory.check_capacity(),
         &_ => println!("You entered: {}", input.trim()),
       },
       Err(error) => {
