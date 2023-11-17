@@ -8,6 +8,74 @@ struct Item {
     name: &'static str,
     weight: u8,
 }
+struct Enemy<'a> {
+    name: &'a str,
+    hp: u8,
+}
+struct Rooms<'a>(Vec<Room<'a>>);
+struct Room<'a> {
+    enemy: Option<Enemy<'a>>,
+    loot: Option<Item>,
+}
+impl<'a> Rooms<'a> {
+    fn populate(&mut self) {
+        self.0.push(Room {
+            enemy: None,
+            loot: Some(Item {
+                name: "Wooden Sword",
+                weight: 1,
+            }),
+        });
+        self.0.push(Room {
+            enemy: Some(Enemy {
+                name: "Quack",
+                hp: 1,
+            }),
+            loot: None,
+        });
+        self.0.push(Room {
+            enemy: Some(Enemy {
+                name: "Quack",
+                hp: 1,
+            }),
+            loot: None,
+        });
+        self.0.push(Room {
+            enemy: None,
+            loot: Some(Item {
+                name: "Beaned Sword",
+                weight: 2,
+            }),
+        });
+        self.0.push(Room {
+            enemy: None,
+            loot: None,
+        });
+        self.0.push(Room {
+            enemy: None,
+            loot: None,
+        });
+        self.0.push(Room {
+            enemy: None,
+            loot: None,
+        });
+        self.0.push(Room {
+            enemy: None,
+            loot: None,
+        });
+        self.0.push(Room {
+            enemy: None,
+            loot: None,
+        });
+        self.0.push(Room {
+            enemy: Some(Enemy {
+                name: "Massive man",
+                hp: 10,
+            }),
+            loot: None,
+        });
+    }
+}
 impl Inventory {
     fn add_item(&mut self, item: Item) {
         match self.0.len() {
@@ -29,19 +97,16 @@ impl Inventory {
         self.0.remove(index - 1);
     }
     fn check_capacity(&self) {
-        let total_weight = self.0.iter().map(|item| item.weight).sum();
-        match total_weight {
-            ..=WEIGHT_CAP => {}
-            _ => {
-                println!("Weight exceeded by {} kg.", total_weight - WEIGHT_CAP);
-                println!("Obvious items to drop:\n");
-                let mut sorted = self.0.clone();
-                sorted.sort_by(|original, sorted| sorted.weight.cmp(&original.weight));
-                sorted
-                    .iter()
-                    .filter(|item| item.weight >= WEIGHT_CAP / 2)
-                    .for_each(|item| println!("{}, {} kg", item.name, item.weight));
-            }
+        let total_weight: u8 = self.0.iter().map(|item| item.weight).sum();
+        if total_weight > WEIGHT_CAP {
+            println!("Weight exceeded by {} kg.", total_weight - WEIGHT_CAP);
+            println!("Obvious items to drop:\n");
+            let mut sorted = self.0.clone();
+            sorted.sort_by(|original, sorted| sorted.weight.cmp(&original.weight));
+            sorted
+                .iter()
+                .filter(|item| item.weight >= WEIGHT_CAP / 2)
+                .for_each(|item| println!("{}, {} kg", item.name, item.weight));
         }
     }
 }
