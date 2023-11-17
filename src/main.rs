@@ -21,7 +21,6 @@ struct Player<'a> {
   name: &'a str,
   hp: u8,
   inventory: Inventory,
-  current_room: u8,
 }
 
 struct Rooms<'a>(Vec<Room<'a>>);
