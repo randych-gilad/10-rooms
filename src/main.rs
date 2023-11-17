@@ -32,8 +32,8 @@ impl<'a> Rooms<'a> {
       room.look();
     }
   }
-  fn room(&self) -> &Room {
-    self.0.get(0).unwrap()
+  fn room(&'a mut self) -> &mut Room {
+    self.0.get_mut(0).unwrap()
   }
 }
 
@@ -50,6 +50,9 @@ impl<'a> Room<'a> {
     if let Some(val) = &self.loot {
       println!("You see loot: {} ({} kg)", val.name, val.weight)
     }
+  }
+  fn remove_item(&mut self) {
+    self.loot = None
   }
 }
 impl<'a> Rooms<'a> {
@@ -157,20 +160,19 @@ fn clear_screen() {
 fn main() {
   let mut rooms: Rooms = Rooms(Vec::new());
   rooms.populate();
-  // let mut inventory: Inventory = Inventory(Vec::with_capacity(INVENTORY_SIZE));
   let mut player: Player = Player {
     name: "Brave",
     hp: 10,
     inventory: Inventory(Vec::with_capacity(INVENTORY_SIZE)),
     current_room: 0,
   };
+  let current_room = rooms.room();
   let mut input = String::new();
   loop {
     println!("q: Exit | w: move/attack | e: look around | i: inventory | c: capacity");
     println!("Name: {} | HP: {}", player.name, player.hp);
     print!("Your command: ");
     stdout().flush().unwrap();
-
     match stdin().read_line(&mut input) {
       Ok(_) => match input.trim() {
         "q" => {
@@ -178,10 +180,13 @@ fn main() {
           break;
         }
         "w" => todo!(),
-        "e" => rooms.look(),
-        "t" => player
-          .inventory
-          .add_item(rooms.room().loot.clone().unwrap()),
+        "e" => current_room.look(),
+        "t" => {
+          player
+            .inventory
+            .add_item(current_room.loot.clone().unwrap());
+          current_room.remove_item();
+        }
         "i" => player.inventory.list_inventory(),
         "c" => player.inventory.check_capacity(),
         &_ => println!("You entered: {}", input.trim()),
