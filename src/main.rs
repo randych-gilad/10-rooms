@@ -179,7 +179,10 @@ fn main() {
           clear_screen();
           break;
         }
-        "w" => rooms_ref.move_room(),
+        "w" => {
+          rooms_ref.0.pop();
+          println!("Room changed.");
+        }
         "e" => rooms_ref.room().look(),
         "t" => {
           player
