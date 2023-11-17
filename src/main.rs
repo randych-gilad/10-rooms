@@ -158,7 +158,6 @@ fn main() {
     name: "Brave",
     hp: 10,
     inventory: Inventory(Vec::with_capacity(INVENTORY_SIZE)),
-    current_room: 0,
   };
   let current_room = rooms.room();
   let mut input = String::new();
