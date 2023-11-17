@@ -91,4 +91,12 @@ fn main() {
         name: "A taste of bright future",
         weight: 10,
     });
+    inventory.list_inventory();
+    inventory.drop_item(3);
+    inventory.add_item(Item {
+        name: "A taste of bright future",
+        weight: 10,
+    });
+    inventory.list_inventory();
+    inventory.check_capacity();
 }
