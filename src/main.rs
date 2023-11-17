@@ -38,11 +38,14 @@ struct Room<'a> {
 }
 impl<'a> Room<'a> {
   fn look(&self) {
-    if let Some(val) = &self.enemy {
-      println!("You see enemies: {:?}", val)
-    }
-    if let Some(val) = &self.loot {
-      println!("You see loot: {} ({} kg)", val.name, val.weight)
+    match (&self.enemy, &self.loot) {
+      (Some(enemy), Some(loot)) => {
+        println!("You see enemies: {:?}", enemy);
+        println!("You see loot: {} ({} kg)", loot.name, loot.weight);
+      }
+      (Some(enemy), None) => println!("You see enemies: {:?}", enemy),
+      (None, Some(loot)) => println!("You see loot: {} ({} kg)", loot.name, loot.weight),
+      (None, None) => println!("You see nothing of interest."),
     }
   }
   fn remove_item(&mut self) {
