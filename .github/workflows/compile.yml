@@ -1,0 +1,22 @@
+name: Compile
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    if: "contains(github.event.head_commit.message, '[yes]')"
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build
+        run: cargo build
+      - name: Run tests
+        run: cargo test
