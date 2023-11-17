@@ -139,6 +139,8 @@ impl Inventory {
         .iter()
         .filter(|item| item.weight >= WEIGHT_CAP / 2)
         .for_each(|item| println!("{}, {} kg", item.name, item.weight));
+    } else {
+      println!("Can carry {} more kg.", WEIGHT_CAP - total_weight)
     }
   }
 }
@@ -161,7 +163,7 @@ fn main() {
   };
   let mut input = String::new();
   loop {
-    println!("q: Exit | w: move/attack | e: look around | i: inventory");
+    println!("q: Exit | w: move/attack | e: look around | i: inventory | c: capacity");
     println!("Name: {} | HP: {}", player.name, player.hp);
     print!("Your command: ");
     stdout().flush().unwrap();
@@ -175,6 +177,7 @@ fn main() {
         "w" => todo!(),
         "e" => rooms.look(),
         "i" => inventory.list_inventory(),
+        "c" => inventory.check_capacity(),
         &_ => println!("You entered: {}", input.trim()),
       },
       Err(error) => {
