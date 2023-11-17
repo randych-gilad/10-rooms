@@ -1,4 +1,4 @@
-use std::io;
+use std::io::{stdin, stdout, Write};
 
 const INVENTORY_SIZE: usize = 9;
 const WEIGHT_CAP: u8 = 50;
@@ -119,56 +119,77 @@ fn main() {
     let mut rooms: Rooms = Rooms(Vec::new());
     rooms.populate();
     let mut inventory = Inventory(Vec::with_capacity(INVENTORY_SIZE));
-    inventory.add_item(Item {
-        name: "The needful",
-        weight: 0,
-    });
-    inventory.add_item(Item {
-        name: "Willy Wonka",
-        weight: 60,
-    });
-    inventory.add_item(Item {
-        name: "Web scrap",
-        weight: 20,
-    });
-    inventory.add_item(Item {
-        name: "Strawman Builder Kit",
-        weight: 40,
-    });
-    inventory.add_item(Item {
-        name: "Kangaroo emblem",
-        weight: 1,
-    });
-    inventory.add_item(Item {
-        name: "Peppermint fountain",
-        weight: 10,
-    });
-    inventory.add_item(Item {
-        name: "Whopper",
-        weight: 0,
-    });
-    inventory.add_item(Item {
-        name: "A tasty burger",
-        weight: 1,
-    });
-    inventory.add_item(Item {
-        name: "Haystack needle",
-        weight: 1,
-    });
-    inventory.add_item(Item {
-        name: "Cuphead master CD",
-        weight: 2,
-    });
-    inventory.add_item(Item {
-        name: "A taste of bright future",
-        weight: 10,
-    });
-    inventory.list_inventory();
-    inventory.drop_item(3);
-    inventory.add_item(Item {
-        name: "A taste of bright future",
-        weight: 10,
-    });
-    inventory.list_inventory();
-    inventory.check_capacity();
+    let mut input = String::new();
+    loop {
+        println!("q: Exit | w: move/attack | e: look around | i: inventory");
+        print!("Your command: ");
+        stdout().flush().unwrap();
+
+        match stdin().read_line(&mut input) {
+            Ok(_) => match input.trim() {
+                "q" => break,
+                "w" => todo!(),
+                "e" => todo!(),
+                "i" => inventory.list_inventory(),
+                &_ => println!("You entered: {}", input.trim()),
+            },
+            Err(error) => {
+                eprintln!("Error reading input: {}", error);
+                break;
+            }
+        }
+        input.clear();
+    }
+    // inventory.add_item(Item {
+    //     name: "The needful",
+    //     weight: 0,
+    // });
+    // inventory.add_item(Item {
+    //     name: "Willy Wonka",
+    //     weight: 60,
+    // });
+    // inventory.add_item(Item {
+    //     name: "Web scrap",
+    //     weight: 20,
+    // });
+    // inventory.add_item(Item {
+    //     name: "Strawman Builder Kit",
+    //     weight: 40,
+    // });
+    // inventory.add_item(Item {
+    //     name: "Kangaroo emblem",
+    //     weight: 1,
+    // });
+    // inventory.add_item(Item {
+    //     name: "Peppermint fountain",
+    //     weight: 10,
+    // });
+    // inventory.add_item(Item {
+    //     name: "Whopper",
+    //     weight: 0,
+    // });
+    // inventory.add_item(Item {
+    //     name: "A tasty burger",
+    //     weight: 1,
+    // });
+    // inventory.add_item(Item {
+    //     name: "Haystack needle",
+    //     weight: 1,
+    // });
+    // inventory.add_item(Item {
+    //     name: "Cuphead master CD",
+    //     weight: 2,
+    // });
+    // inventory.add_item(Item {
+    //     name: "A taste of bright future",
+    //     weight: 10,
+    // });
+    // inventory.list_inventory();
+    // inventory.drop_item(3);
+    // inventory.add_item(Item {
+    //     name: "A taste of bright future",
+    //     weight: 10,
+    // });
+    // inventory.list_inventory();
+    // inventory.check_capacity();
 }
