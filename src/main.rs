@@ -20,7 +20,7 @@ struct Enemy<'a> {
 struct Player<'a> {
   name: &'a str,
   hp: u8,
-  inventory: Inventory,
+  inventory: &'a Inventory,
   current_room: u8,
 }
 
@@ -152,10 +152,17 @@ fn clear_screen() {
 fn main() {
   let mut rooms: Rooms = Rooms(Vec::new());
   rooms.populate();
-  let mut inventory = Inventory(Vec::with_capacity(INVENTORY_SIZE));
+  let mut inventory: Inventory = Inventory(Vec::with_capacity(INVENTORY_SIZE));
+  let mut player: Player = Player {
+    name: "Brave",
+    hp: 10,
+    inventory: &inventory,
+    current_room: 0,
+  };
   let mut input = String::new();
   loop {
     println!("q: Exit | w: move/attack | e: look around | i: inventory");
+    println!("Name: {} | HP: {}", player.name, player.hp);
     print!("Your command: ");
     stdout().flush().unwrap();
 
@@ -176,6 +183,7 @@ fn main() {
       }
     }
     input.clear();
+    println!("------------------------------------")
   }
   // inventory.add_item(Item {
   //     name: "The needful",
