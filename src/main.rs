@@ -27,11 +27,6 @@ struct Player<'a> {
 struct Rooms<'a>(Vec<Room<'a>>);
 
 impl<'a> Rooms<'a> {
-  fn look(&self) {
-    if let Some(room) = self.0.get(0) {
-      room.look();
-    }
-  }
   fn room(&'a mut self) -> &mut Room {
     self.0.get_mut(0).unwrap()
   }
