@@ -45,4 +45,6 @@ impl Inventory {
         }
     }
 }
-fn main() {}
+fn main() {
+    let mut inventory = Inventory(Vec::with_capacity(INVENTORY_SIZE));
+}
