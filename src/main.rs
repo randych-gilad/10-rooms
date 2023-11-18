@@ -227,8 +227,7 @@ fn main() {
         "r" => match player.inventory.0.len() {
           0 => println!("Cannot equip. Inventory is empty."),
           _ => {
-            player.loadout.rhand = Some(player.inventory.0.get(0).unwrap().to_owned());
-            player.inventory.drop_item(0)
+            player.loadout.rhand = Some(player.inventory.0.remove(0));
           }
         },
         "t" => {
