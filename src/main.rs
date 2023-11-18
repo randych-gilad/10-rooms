@@ -9,6 +9,7 @@ struct Inventory(Vec<Item>);
 struct Item {
   name: String,
   weight: u8,
+  attack: Option<u8>,
 }
 #[allow(dead_code)]
 #[derive(Debug)]
@@ -39,7 +40,11 @@ trait Attack<T> {
 }
 impl Attack<Enemy> for Player {
   fn attack(&self, target: &mut Enemy) {
-    target.hp -= 1;
+    // target.hp -= self.loadout.rhand.as_ref().unwrap().attack.unwrap();
+    match self.loadout.rhand.as_ref() {
+      Some(weapon) => target.hp -= weapon.attack.unwrap(),
+      None => target.hp -= 1,
+    }
   }
 }
 impl Attack<Player> for Enemy {
@@ -57,6 +62,7 @@ impl Rooms {
       loot: Some(Item {
         name: "Wooden Sword".into(),
         weight: 1,
+        attack: Some(1),
       }),
     });
     self.0.push(Room {
@@ -78,6 +84,7 @@ impl Rooms {
       loot: Some(Item {
         name: "Beaned Sword".into(),
         weight: 2,
+        attack: Some(1),
       }),
     });
     self.0.push(Room {
