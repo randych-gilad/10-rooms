@@ -44,11 +44,6 @@ impl Attack<Enemy> for Player {
       Some(ref val) => target.hp -= val.attack.unwrap(),
       None => target.hp -= 1,
     }
-    // if let Some(val) = self.loadout.rhand.as_ref().and_then(|rh| rh.attack) {
-    //   target.hp += val;
-    // } else {
-    //   target.hp -= 1;
-    // }
   }
 }
 impl Attack<Player> for Enemy {
@@ -228,11 +223,14 @@ fn main() {
               rooms_ref.room().remove_enemy()
             }
           }
-          None => {
-            rooms_ref.move_room();
-            println!("Room changed.");
-            rooms_ref.room().look()
-          }
+          None => match rooms_ref.0.len() {
+            0 => println!("Goodbye."),
+            _ => {
+              rooms_ref.move_room();
+              println!("Room changed.");
+              rooms_ref.room().look()
+            }
+          },
         },
         "e" => rooms_ref.room().look(),
         "r" => match player.inventory.0.len() {
