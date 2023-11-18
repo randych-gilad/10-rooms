@@ -7,43 +7,43 @@ struct Inventory(Vec<Item>);
 
 #[derive(Clone, Eq, PartialEq)]
 struct Item {
-  name: &'static str,
+  name: String,
   weight: u8,
 }
 #[allow(dead_code)]
 #[derive(Debug)]
-struct Enemy<'a> {
-  name: &'a str,
+struct Enemy {
+  name: String,
   hp: u8,
 }
 
-struct Player<'a> {
-  name: &'a str,
+struct Player {
+  name: String,
   hp: u8,
   inventory: Inventory,
 }
 
-struct Rooms<'a>(Vec<Room<'a>>);
+struct Rooms(Vec<Room>);
 
-impl<'a> Rooms<'a> {
+impl Rooms {
   fn populate(&mut self) {
     self.0.push(Room {
       enemy: None,
       loot: Some(Item {
-        name: "Wooden Sword",
+        name: "Wooden Sword".into(),
         weight: 1,
       }),
     });
     self.0.push(Room {
       enemy: Some(Enemy {
-        name: "Quack",
+        name: "Quack".into(),
         hp: 1,
       }),
       loot: None,
     });
     self.0.push(Room {
       enemy: Some(Enemy {
-        name: "Quack",
+        name: "Quack".into(),
         hp: 1,
       }),
       loot: None,
@@ -51,7 +51,7 @@ impl<'a> Rooms<'a> {
     self.0.push(Room {
       enemy: None,
       loot: Some(Item {
-        name: "Beaned Sword",
+        name: "Beaned Sword".into(),
         weight: 2,
       }),
     });
@@ -77,28 +77,28 @@ impl<'a> Rooms<'a> {
     });
     self.0.push(Room {
       enemy: Some(Enemy {
-        name: "Massive man",
+        name: "Massive man".into(),
         hp: 10,
       }),
       loot: None,
     });
   }
-  fn room(&'a mut self) -> &mut Room {
+  fn room(&mut self) -> &mut Room {
     self.0.get_mut(0).unwrap()
   }
-  fn move_room(&'a mut self) {
+  fn move_room(&mut self) {
     self.0.pop();
   }
 }
 
-impl<'a> Rooms<'a> {}
+impl Rooms {}
 
 #[allow(dead_code)]
-struct Room<'a> {
-  enemy: Option<Enemy<'a>>,
+struct Room {
+  enemy: Option<Enemy>,
   loot: Option<Item>,
 }
-impl<'a> Room<'a> {
+impl Room {
   fn look(&self) {
     match (&self.enemy, &self.loot) {
       (Some(enemy), Some(loot)) => {
@@ -162,7 +162,7 @@ fn main() {
   let mut rooms: Rooms = Rooms(Vec::new());
   rooms.populate();
   let mut player: Player = Player {
-    name: "Brave",
+    name: "Brave".into(),
     hp: 10,
     inventory: Inventory(Vec::with_capacity(INVENTORY_SIZE)),
   };
@@ -180,7 +180,7 @@ fn main() {
           break;
         }
         "w" => {
-          rooms_ref.0.pop();
+          rooms_ref.move_room();
           println!("Room changed.");
         }
         "e" => rooms_ref.room().look(),
