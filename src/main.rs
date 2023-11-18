@@ -27,9 +27,6 @@ struct Loadout {
   rhand: Option<Item>,
 }
 impl Loadout {
-  fn equip(&mut self, item: Item) {
-    self.rhand = Some(item);
-  }
   fn check(&self) {
     println!("Loadout:");
     if let Some(val) = self.rhand.as_ref() {
@@ -228,10 +225,13 @@ fn main() {
           }
         },
         "e" => rooms_ref.room().look(),
-        "r" => {
-          player.loadout.rhand = Some(player.inventory.0.get(0).unwrap().to_owned());
-          player.inventory.drop_item(0)
-        }
+        "r" => match player.inventory.0.len() {
+          0 => println!("Cannot equip. Inventory is empty."),
+          _ => {
+            player.loadout.rhand = Some(player.inventory.0.get(0).unwrap().to_owned());
+            player.inventory.drop_item(0)
+          }
+        },
         "t" => {
           player
             .inventory
