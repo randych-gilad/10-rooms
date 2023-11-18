@@ -19,8 +19,8 @@ jobs:
       - name: Unwrap/Expect used
         run: |
           cargo clippy -- \
-          -W clippy:unwrap_used \
-          -W clippy:expect_used
+          -W clippy::unwrap_used \
+          -W clippy::expect_used
       - name: Build
         run: cargo build
       - name: Run tests
