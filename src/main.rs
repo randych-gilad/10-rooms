@@ -5,7 +5,7 @@ const WEIGHT_CAP: u8 = 50;
 #[derive(Clone)]
 struct Inventory(Vec<Item>);
 
-#[derive(Clone, Eq, PartialEq, Debug)]
+#[derive(Clone, Eq, PartialEq)]
 struct Item {
   name: String,
   weight: u8,
@@ -32,7 +32,7 @@ impl Loadout {
   }
   fn check(&self) {
     println!("Loadout:");
-    println!("Right hand: {:?}", self.rhand);
+    println!("Right hand: {}", self.rhand.as_ref().unwrap().name);
   }
 }
 trait Attack<T> {
