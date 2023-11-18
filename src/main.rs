@@ -5,7 +5,7 @@ const WEIGHT_CAP: u8 = 50;
 #[derive(Clone)]
 struct Inventory(Vec<Item>);
 
-#[derive(Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq, Debug)]
 struct Item {
   name: String,
   weight: u8,
@@ -21,8 +21,20 @@ struct Player {
   name: String,
   hp: u8,
   inventory: Inventory,
+  loadout: Loadout,
 }
-
+struct Loadout {
+  rhand: Option<Item>,
+}
+impl Loadout {
+  fn equip(&mut self, item: Item) {
+    self.rhand = Some(item);
+  }
+  fn check(&self) {
+    println!("Loadout:");
+    println!("Right hand: {:?}", self.rhand);
+  }
+}
 trait Attack<T> {
   fn attack(&self, target: &mut T);
 }
@@ -180,11 +192,13 @@ fn main() {
     name: "Brave".into(),
     hp: 10,
     inventory: Inventory(Vec::with_capacity(INVENTORY_SIZE)),
+    loadout: Loadout { rhand: None },
   };
   let rooms_ref = &mut rooms;
   let mut input = String::new();
   loop {
-    println!("q: Exit | w: move/attack | e: look around | t: pick up | i: inventory | c: capacity");
+    println!("General commands -> q: Exit | w: Move/Attack | e: Inspect room");
+    println!("Inventory -> r: Equip | t: Pick up | i: Inventory | c: Capacity | x: Loadout");
     println!("Name: {} | HP: {}", player.name, player.hp);
     print!("Your command: ");
     stdout().flush().unwrap();
@@ -211,6 +225,10 @@ fn main() {
           }
         },
         "e" => rooms_ref.room().look(),
+        "r" => {
+          player.loadout.rhand = Some(player.inventory.0.get(0).unwrap().to_owned());
+          player.inventory.drop_item(0)
+        }
         "t" => {
           player
             .inventory
@@ -219,6 +237,7 @@ fn main() {
         }
         "i" => player.inventory.list_inventory(),
         "c" => player.inventory.check_capacity(),
+        "x" => player.loadout.check(),
         &_ => println!("You entered: {}", input.trim()),
       },
       Err(error) => {
