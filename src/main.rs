@@ -32,6 +32,9 @@ impl Loadout {
   }
   fn check(&self) {
     println!("Loadout:");
+    if let Some(val) = self.rhand.as_ref() {
+      println!("{}", val.name)
+    }
     println!("Right hand: {}", self.rhand.as_ref().unwrap().name);
   }
 }
