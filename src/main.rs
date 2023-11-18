@@ -28,11 +28,10 @@ struct Loadout {
 }
 impl Loadout {
   fn check(&self) {
-    println!("Loadout:");
-    if let Some(val) = self.rhand.as_ref() {
-      println!("{}", val.name)
+    match self.rhand.as_ref() {
+      Some(val) => println!("Right hand: {}", val.name),
+      None => println!("Nothing equipped."),
     }
-    println!("Right hand: {}", self.rhand.as_ref().unwrap().name);
   }
 }
 trait Attack<T> {
