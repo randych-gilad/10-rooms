@@ -23,6 +23,20 @@ struct Player {
   inventory: Inventory,
 }
 
+trait Attack<T> {
+  fn attack(self, target: &mut T);
+}
+impl Attack<Enemy> for Player {
+  fn attack(self, target: &mut Enemy) {
+    target.hp -= 1;
+  }
+}
+impl Attack<Player> for Enemy {
+  fn attack(self, target: &mut Player) {
+    target.hp -= 1;
+  }
+}
+
 struct Rooms(Vec<Room>);
 
 impl Rooms {
@@ -90,8 +104,6 @@ impl Rooms {
     self.0.remove(0);
   }
 }
-
-impl Rooms {}
 
 #[allow(dead_code)]
 struct Room {
