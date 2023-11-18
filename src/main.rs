@@ -21,13 +21,8 @@ struct Player {
   name: String,
   hp: u8,
   inventory: Inventory,
-  current_room: usize,
 }
-impl Player {
-  fn move_room(&mut self) {
-    self.current_room += 1;
-  }
-}
+
 struct Rooms(Vec<Room>);
 
 impl Rooms {
@@ -88,8 +83,11 @@ impl Rooms {
       loot: None,
     });
   }
-  fn room(&mut self, current_room: usize) -> &mut Room {
-    self.0.get_mut(current_room).unwrap()
+  fn room(&mut self) -> &mut Room {
+    self.0.get_mut(0).unwrap()
+  }
+  fn move_room(&mut self) {
+    self.0.remove(0);
   }
 }
 
@@ -167,7 +165,6 @@ fn main() {
     name: "Brave".into(),
     hp: 10,
     inventory: Inventory(Vec::with_capacity(INVENTORY_SIZE)),
-    current_room: 0,
   };
   let rooms_ref = &mut rooms;
   let mut input = String::new();
@@ -183,15 +180,15 @@ fn main() {
           break;
         }
         "w" => {
-          player.move_room();
+          rooms_ref.move_room();
           println!("Room changed.");
         }
-        "e" => rooms_ref.room(player.current_room).look(),
+        "e" => rooms_ref.room().look(),
         "t" => {
           player
             .inventory
-            .add_item(rooms_ref.room(player.current_room).loot.clone().unwrap());
-          rooms_ref.room(player.current_room).remove_item();
+            .add_item(rooms_ref.room().loot.clone().unwrap());
+          rooms_ref.room().remove_item();
         }
         "i" => player.inventory.list_inventory(),
         "c" => player.inventory.check_capacity(),
