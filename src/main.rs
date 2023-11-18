@@ -24,15 +24,15 @@ struct Player {
 }
 
 trait Attack<T> {
-  fn attack(self, target: &mut T);
+  fn attack(&self, target: &mut T);
 }
 impl Attack<Enemy> for Player {
-  fn attack(self, target: &mut Enemy) {
+  fn attack(&self, target: &mut Enemy) {
     target.hp -= 1;
   }
 }
 impl Attack<Player> for Enemy {
-  fn attack(self, target: &mut Player) {
+  fn attack(&self, target: &mut Player) {
     target.hp -= 1;
   }
 }
@@ -125,6 +125,9 @@ impl Room {
   fn remove_item(&mut self) {
     self.loot = None
   }
+  fn remove_enemy(&mut self) {
+    self.enemy = None
+  }
 }
 
 impl Inventory {
@@ -191,10 +194,22 @@ fn main() {
           clear_screen();
           break;
         }
-        "w" => {
-          rooms_ref.move_room();
-          println!("Room changed.");
-        }
+        "w" => match rooms_ref.room().enemy.as_mut() {
+          Some(enemy) => {
+            println!("You hit {} for 1 attack.", enemy.name);
+            player.attack(enemy);
+            println!("{} took 1 damage. {} HP left.", enemy.name, enemy.hp);
+            if enemy.hp == 0 {
+              println!("{} died.", enemy.name);
+              rooms_ref.room().remove_enemy()
+            }
+          }
+          None => {
+            rooms_ref.move_room();
+            println!("Room changed.");
+            rooms_ref.room().look()
+          }
+        },
         "e" => rooms_ref.room().look(),
         "t" => {
           player
