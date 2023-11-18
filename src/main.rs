@@ -160,7 +160,7 @@ impl Inventory {
     println!();
   }
   fn drop_item(&mut self, index: usize) {
-    self.0.remove(index - 1);
+    self.0.remove(index);
   }
   fn check_capacity(&self) {
     let total_weight: u8 = self.0.iter().map(|item| item.weight).sum();
