@@ -5,7 +5,7 @@ const WEIGHT_CAP: u8 = 50;
 #[derive(Clone)]
 struct Inventory(Vec<Item>);
 
-#[derive(Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq, Debug)]
 struct Item {
   name: String,
   weight: u8,
@@ -123,6 +123,7 @@ impl Rooms {
 }
 
 #[allow(dead_code)]
+#[derive(Debug)]
 struct Room {
   enemy: Option<Enemy>,
   loot: Option<Item>,
@@ -213,22 +214,27 @@ fn main() {
           clear_screen();
           break;
         }
-        "w" => match rooms_ref.room().enemy.as_mut() {
-          Some(enemy) => {
-            println!("You hit {} for 1 attack.", enemy.name);
-            player.attack(enemy);
-            println!("{} took 1 damage. {} HP left.", enemy.name, enemy.hp);
-            if enemy.hp == 0 {
-              println!("{} died.", enemy.name);
-              rooms_ref.room().remove_enemy()
+        "w" => match rooms_ref.0.len() {
+          0 => println!("Nothing left to do. Press \"q\" to exit."),
+          _ => match rooms_ref.room().enemy.as_mut() {
+            Some(enemy) => {
+              println!("You hit {} for 1 attack.", enemy.name);
+              player.attack(enemy);
+              println!("{} took 1 damage. {} HP left.", enemy.name, enemy.hp);
+              if enemy.hp == 0 {
+                println!("{} died.", enemy.name);
+                rooms_ref.room().remove_enemy()
+              }
             }
-          }
-          None => match rooms_ref.0.len() {
-            0 => println!("Goodbye."),
-            _ => {
+            None => {
               rooms_ref.move_room();
-              println!("Room changed.");
-              rooms_ref.room().look()
+              match rooms_ref.0.len() {
+                0 => println!("Nothing left to do. Press \"q\" to exit."),
+                _ => {
+                  println!("Room changed.");
+                  rooms_ref.room().look()
+                }
+              }
             }
           },
         },
